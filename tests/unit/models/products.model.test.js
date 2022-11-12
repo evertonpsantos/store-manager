@@ -3,7 +3,7 @@ const sinon = require('sinon');
 
 const productsModel = require('../../../src/models/products.model');
 const connection = require('../../../src/database/connection');
-const { allProducts, singleProductResponse } = require('./mocks/products.model.mock');
+const { allProducts, singleProductResponse, newProduct, newRegisteredProductMock } = require('./mocks/products.model.mock');
 
 describe('Tests the products model layer', () => {
   afterEach(sinon.restore);
@@ -18,5 +18,14 @@ describe('Tests the products model layer', () => {
     sinon.stub(connection, 'execute').resolves([[singleProductResponse]]);
     const result = await productsModel.findById(1);
     expect(result).to.be.deep.equal(singleProductResponse);
+  });
+
+  it('Tests if it possible to insert a new product in the DB', async () => {
+    sinon.stub(connection, 'execute')
+      .onFirstCall().resolves([{ insertId: 1 }])
+      .onSecondCall().resolves([[newRegisteredProductMock]]);
+    
+    const result = await productsModel.createNewProduct(newProduct);
+    expect(result).to.be.deep.equal(newRegisteredProductMock);
   });
 });

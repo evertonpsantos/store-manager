@@ -5,7 +5,7 @@ const { expect } = chai;
 
 const productsController = require('../../../src/controllers/products.controller');
 const productService = require('../../../src/services/products.service');
-const { allProducts } = require('../models/mocks/products.model.mock');
+const { allProducts, newRegisteredProductMock } = require('../models/mocks/products.model.mock');
 const { notFoundMessage } = require('./mocks/products.controller.mock');
 
 chai.use(sinonChai);
@@ -64,5 +64,25 @@ describe('Tests the products controller layer', () => {
     await productsController.findById(req, res);
     expect(res.status).to.have.been.calledWith(errorStatus);
     expect(res.json).to.have.been.calledWith(notFoundMessage);
+  });
+
+  it('Tests if it returns right response when createNewProduct is called', async () => {
+    const res = {};
+    const req = {
+      body: {
+        name: "Rejuvenator"
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(productService, 'createNewProduct')
+        .resolves({ type: null, message: newRegisteredProductMock });
+
+    const rightStatus = 201;
+    await productsController.createNewProduct(req, res);
+    expect(res.status).to.have.been.calledWith(rightStatus);
+    expect(res.json).to.have.been.calledWith(newRegisteredProductMock);
   });
 });
