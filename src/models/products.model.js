@@ -1,5 +1,4 @@
 const camelize = require('camelize');
-// const snakeize = require('snakeize');
 const connection = require('../database/connection');
 
 const getAll = async () => {
