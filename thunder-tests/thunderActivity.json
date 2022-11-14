@@ -88,16 +88,16 @@
     "colId": "history",
     "containerId": "",
     "name": "http://localhost:3000/products/4",
-    "url": "http://localhost:3000/products",
+    "url": "http://localhost:3000/sales",
     "method": "POST",
     "sortNum": 0,
     "created": "2022-11-11T21:34:30.308Z",
-    "modified": "2022-11-12T02:47:18.621Z",
+    "modified": "2022-11-14T19:45:28.540Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"name\": \"Rejuvenator\"\n}",
+      "raw": "[\n  {\n    \"productId\": 1,\n    \"quantity\": 1\n  },\n  {\n    \"productId\": 555,\n    \"quantity\": 5\n  }\n]",
       "form": []
     },
     "tests": []
@@ -107,11 +107,11 @@
     "colId": "history",
     "containerId": "",
     "name": "http://localhost:3000/products/5",
-    "url": "http://localhost:3000/products/5",
+    "url": "http://localhost:3000/products",
     "method": "GET",
     "sortNum": 0,
     "created": "2022-11-11T21:35:51.692Z",
-    "modified": "2022-11-11T21:35:51.788Z",
+    "modified": "2022-11-12T03:38:34.573Z",
     "headers": [],
     "params": [],
     "tests": []

@@ -8,6 +8,15 @@ const validateNewProductSchema = Joi.object({
 }),
 });
 
+const newSaleSchema = Joi.array().items(Joi.object({
+  productId: Joi.number().integer().required(),
+  quantity: Joi.number().integer().min(1).required(),
+}).required().messages({
+    'number.min': '{#label} must be greater than or equal to {#limit}',
+    'any.required': '{#label} is required',
+  }));
+
 module.exports = {
   validateNewProductSchema,
+  newSaleSchema,
 };
