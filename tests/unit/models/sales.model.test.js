@@ -16,4 +16,16 @@ describe('Tests sales model layer', () => {
     const result = await salesModel.registerNewSale(salesModelMocks.newSaleMock);
     expect(result).to.be.equal(1);
   });
+
+  it(`Tests if it's possible to get all sales`, async () => {
+    sinon.stub(connection, 'execute').resolves([salesModelMocks.allSalesDbResponse]);
+    const result = await salesModel.getSales();
+    expect(result).to.be.deep.equal(salesModelMocks.allSalesMockFinal);
+  });
+
+  it(`Tests if it's possible to get sale by id`, async () => {
+    sinon.stub(connection, 'execute').resolves([salesModelMocks.saleByIdMockDB]);
+    const result = await salesModel.getSaleById(1);
+    expect(result).to.be.deep.equal(salesModelMocks.saleByIdFinal);
+  });
 });
