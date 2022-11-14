@@ -4,7 +4,6 @@ const productsModel = require('../models/products.model');
 const registerNewSale = async (newSale) => {
   const productsList = await Promise.all(newSale
     .map(({ productId }) => productsModel.findById(productId)));
-  console.log(productsList);
   const notFoundProducts = productsList.some((product) => product.length === 0);
   if (notFoundProducts) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
 
