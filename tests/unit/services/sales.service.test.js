@@ -45,11 +45,26 @@ describe('Tests sales service layer', () => {
 
     it('Tests if returns error when invalid id is given', async () => {
     sinon.stub(salesModel, 'getSaleById').resolves([]);
-      const invalidId = 333;
-      const errorType = 'SALE_NOT_FOUND';
-      const errorMessage = 'Sale not found';
+    const invalidId = 333;
+    const errorType = 'SALE_NOT_FOUND';
+    const errorMessage = 'Sale not found';
     const result = await salesService.getSaleById(invalidId);
     expect(result.type).to.equal(errorType);
     expect(result.message).to.deep.equal(errorMessage);
-  })
+    })
+  
+  it('Tests if returns right object when deleting a sale', async () => {
+    sinon.stub(salesModel, 'getSaleById').resolves([salesServiceMock.saleByIdFinal]);
+    sinon.stub(salesModel, 'deleteSale').resolves();
+    const result = await salesService.deleteSale(2);
+    expect(result.type).to.be.equal(null);
+    expect(result.message).to.be.equal('');
+  });
+
+  it('Tests if returns error when invalid id is passed to deleteSale', async () => {
+    sinon.stub(salesModel, 'getSaleById').resolves([]);
+    const result = await salesService.deleteSale(333);
+    expect(result.type).to.be.equal('SALE_NOT_FOUND');
+    expect(result.message).to.be.equal('Sale not found');
+  });
 });

@@ -8,6 +8,11 @@ const rightResponse = {
   ]
 }
 
+const notFoundSaleMessage = {
+  message: "Product not found"
+};
+
 module.exports = {
   rightResponse,
+  notFoundSaleMessage
 }

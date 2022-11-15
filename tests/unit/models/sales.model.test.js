@@ -28,4 +28,10 @@ describe('Tests sales model layer', () => {
     const result = await salesModel.getSaleById(1);
     expect(result).to.be.deep.equal(salesModelMocks.saleByIdFinal);
   });
+
+    it('Tests if is possible to delete a sale', async () => {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+    const result = await salesModel.deleteSale(3);
+    expect(result).to.be.equal(1);
+  });
 });

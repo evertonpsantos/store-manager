@@ -109,7 +109,7 @@ describe('Tests the products controller layer', () => {
     expect(res.json).to.have.been.calledWith(updatedProductMock);
   });
 
-  it('Tests if it retuns error is returned when wrong is passed', async () => {
+  it('Tests if it retuns error is returned when wrong id is passed to updateProduct', async () => {
     const res = {};
     const req = {
       body: {
@@ -131,7 +131,7 @@ describe('Tests the products controller layer', () => {
     expect(res.json).to.have.been.calledWith(notFoundMessage);
   });
 
-  it('Tests if it returns right response when updateProduct is called', async () => {
+  it('Tests if it returns right response when deleteProduct is called', async () => {
     const res = {};
     const req = {
       params: {
@@ -151,7 +151,7 @@ describe('Tests the products controller layer', () => {
     expect(res.json).to.have.been.calledWith();
   });
 
-  it('Tests if it retuns error is returned when wrong is passed', async () => {
+  it('Tests if it retuns error is returned when wrong id is passed to deleteProduct', async () => {
     const res = {};
     const req = {
       params: {

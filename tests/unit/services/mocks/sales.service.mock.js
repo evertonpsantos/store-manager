@@ -13,8 +13,17 @@ const successResponseMock = {
   name: "Martelo de Thor"
 }
 
+const successSaleById = [
+  {
+    "date": "2022-11-15T20:48:15.000Z",
+    "productId": 3,
+    "quantity": 15
+  }
+]
+
 module.exports = {
   errorSaleMock,
   successSaleMock,
   successResponseMock,
+  successSaleById,
 }

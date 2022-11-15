@@ -5,7 +5,7 @@ const { expect } = chai;
 
 const salesService = require('../../../src/services/sales.service');
 const salesController = require('../../../src/controllers/sales.controller');
-const { rightResponse } = require('./mocks/sales.controller.mock');
+const { rightResponse, notFoundSaleMessage } = require('./mocks/sales.controller.mock');
 const salesModelMock = require('../models/mocks/sales.model.mock');
 
 chai.use(sinonChai);
@@ -111,5 +111,45 @@ describe('Tests sales controller layer', () => {
     await salesController.getSaleById(req, res);
     expect(res.status).to.have.been.calledWith(rightStatus);
     expect(res.json).to.have.been.calledWith({ message: productNotFoundMock.message });
+  });
+
+  it('Tests if it returns right response when deleteSale is called', async () => {
+    const res = {};
+    const req = {
+      params: {
+        id: 2
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(salesService, 'deleteSale')
+        .resolves({ type: null, message: '' });
+
+    const rightStatus = 204;
+    await salesController.deleteSale(req, res);
+    expect(res.status).to.have.been.calledWith(rightStatus);
+    expect(res.json).to.have.been.calledWith();
+  });
+
+  it('Tests if it retuns error is returned when wrong id is passed to deleteProduct', async () => {
+    const res = {};
+    const req = {
+      params: {
+        id: 555
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(salesService, 'deleteSale')
+      .resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+
+    const errorStatus = 404;
+    await salesController.deleteSale(req, res);
+    expect(res.status).to.have.been.calledWith(errorStatus);
+    expect(res.json).to.have.been.calledWith(notFoundSaleMessage);
   });
 });
