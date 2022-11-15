@@ -11,7 +11,7 @@ describe('Tests sales service layer', () => {
   afterEach(sinon.restore);
 
   it('Tests if returns error object when invalid id is passed', async () => {
-    sinon.stub(productsModel, 'findById').resolves([undefined]);
+    sinon.stub(productsModel, 'findById').resolves(undefined);
     const errorType = 'PRODUCT_NOT_FOUND';
     const errorMessage = 'Product not found';
     const result = await salesService.registerNewSale(salesServiceMock.errorSaleMock);
