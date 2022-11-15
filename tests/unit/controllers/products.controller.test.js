@@ -5,7 +5,7 @@ const { expect } = chai;
 
 const productsController = require('../../../src/controllers/products.controller');
 const productService = require('../../../src/services/products.service');
-const { allProducts, newRegisteredProductMock } = require('../models/mocks/products.model.mock');
+const { allProducts, newRegisteredProductMock, updatedProductMock } = require('../models/mocks/products.model.mock');
 const { notFoundMessage } = require('./mocks/products.controller.mock');
 
 chai.use(sinonChai);
@@ -84,5 +84,50 @@ describe('Tests the products controller layer', () => {
     await productsController.createNewProduct(req, res);
     expect(res.status).to.have.been.calledWith(rightStatus);
     expect(res.json).to.have.been.calledWith(newRegisteredProductMock);
+  });
+
+  it('Tests if it returns right response when updateProduct is called', async () => {
+    const res = {};
+    const req = {
+      body: {
+        name: 'She-Hulk`s Glasses'
+      },
+      params: {
+        id: 1
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(productService, 'updateProduct')
+        .resolves({ type: null, message: updatedProductMock });
+
+    const rightStatus = 200;
+    await productsController.updateProduct(req, res);
+    expect(res.status).to.have.been.calledWith(rightStatus);
+    expect(res.json).to.have.been.calledWith(updatedProductMock);
+  });
+
+  it('Tests if it retuns error is returned when wrong is passed', async () => {
+    const res = {};
+    const req = {
+      body: {
+        name: "She-Hulk`s Glasses"
+      },
+      params: {
+        id: 555
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(productService, 'updateProduct').resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+
+    const errorStatus = 404;
+    await productsController.updateProduct(req, res);
+    expect(res.status).to.have.been.calledWith(errorStatus);
+    expect(res.json).to.have.been.calledWith(notFoundMessage);
   });
 });

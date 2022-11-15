@@ -30,4 +30,11 @@ describe('Tests the products model layer', () => {
     const result = await productsModel.createNewProduct(newProduct);
     expect(result).to.be.deep.equal(newRegisteredProductMock);
   });
+
+  it('Tests if it is possible to update a products information', async () => {
+    sinon.stub(connection, 'execute').onFirstCall().resolves()
+      .onSecondCall().resolves([[productModelMocks.updatedProductMock]]);
+    const result = await productsModel.updateProduct(`She-Hulk's Glasses`, 1);
+    expect(result).to.be.deep.equal(productModelMocks.updatedProductMock);
+  });
 });

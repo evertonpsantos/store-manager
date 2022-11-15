@@ -27,9 +27,15 @@ const newRegisteredProductMock = {
   name: "Rejuvenator"
 }
 
+const updatedProductMock = {
+  id: 1,
+  name: `She-Hulk's Glasses`
+}
+
 module.exports = {
   allProducts,
   singleProductResponse,
   newProduct,
   newRegisteredProductMock,
+  updatedProductMock,
 }

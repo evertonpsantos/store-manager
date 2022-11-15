@@ -3,7 +3,9 @@ const sinon = require('sinon');
 
 const productService = require('../../../src/services/products.service');
 const productsModel = require('../../../src/models/products.model');
-const { allProducts, newProduct, newRegisteredProductMock } = require('../models/mocks/products.model.mock');
+const { allProducts, newProduct,
+  newRegisteredProductMock, updatedProductMock } = require('../models/mocks/products.model.mock');
+const { successResponseMock } = require('./mocks/sales.service.mock');
 
 describe('Tests the products service layer', () => {
   afterEach(sinon.restore);
@@ -38,5 +40,20 @@ describe('Tests the products service layer', () => {
     const result = await productService.createNewProduct(newProduct);
     expect(result.type).to.be.equal(null);
     expect(result.message).to.be.deep.equal(newRegisteredProductMock);
+  });
+
+  it('Tests if it returns right object when trying to update a product', async () => {
+    sinon.stub(productsModel, 'findById').resolves([[successResponseMock]])
+    sinon.stub(productsModel, 'updateProduct').resolves(updatedProductMock);
+    const result = await productService.updateProduct({ name: `She-Hulk's Glasses`}, 1);
+    expect(result.type).to.be.equal(null)
+    expect(result.message).to.be.equal(updatedProductMock)
+  });
+
+  it('Tests if retuns error when invalid product id is passed', async () => {
+    sinon.stub(productsModel, 'findById').resolves(undefined);
+    const result = await productService.updateProduct({ name: `She-Hulk's Glasses`}, 222);
+    expect(result.type).to.be.equal('PRODUCT_NOT_FOUND');
+    expect(result.message).to.be.equal('Product not found');
   });
 });

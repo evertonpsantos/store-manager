@@ -88,16 +88,16 @@
     "colId": "history",
     "containerId": "",
     "name": "http://localhost:3000/products/4",
-    "url": "http://localhost:3000/products",
-    "method": "POST",
+    "url": "http://localhost:3000/products/222",
+    "method": "PUT",
     "sortNum": 0,
     "created": "2022-11-11T21:34:30.308Z",
-    "modified": "2022-11-15T02:15:48.819Z",
+    "modified": "2022-11-15T17:25:36.842Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "[{\n  \"productId\": 1,\n  \"quantity\": 1\n}]",
+      "raw": "{\n  \"name\": \"She-Hulk Glasses\"\n}",
       "form": []
     },
     "tests": []
