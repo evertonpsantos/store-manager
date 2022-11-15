@@ -29,9 +29,16 @@ describe('Tests sales model layer', () => {
     expect(result).to.be.deep.equal(salesModelMocks.saleByIdFinal);
   });
 
-    it('Tests if is possible to delete a sale', async () => {
+  it('Tests if is possible to delete a sale', async () => {
     sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
     const result = await salesModel.deleteSale(3);
     expect(result).to.be.equal(1);
+  });
+
+  it('Tests if it`s possible to update a sale', async () => {
+    sinon.stub(connection, 'execute').onFirstCall().resolves()
+      .onSecondCall().resolves([salesModelMocks.saleByIdMockDB]);
+    const result = await salesModel.updateSale([{ productId: 1, quantity: 10 }], 2);
+    expect(result).to.deep.equal(salesModelMocks.saleByIdFinal)
   });
 });

@@ -5,8 +5,9 @@ const { expect } = chai;
 
 const salesService = require('../../../src/services/sales.service');
 const salesController = require('../../../src/controllers/sales.controller');
-const { rightResponse, notFoundSaleMessage } = require('./mocks/sales.controller.mock');
+const { rightResponse, notFoundSaleMessage, rightUpdateSaleResponse } = require('./mocks/sales.controller.mock');
 const salesModelMock = require('../models/mocks/sales.model.mock');
+const { notFoundMessage } = require('./mocks/products.controller.mock');
 
 chai.use(sinonChai);
 
@@ -133,7 +134,7 @@ describe('Tests sales controller layer', () => {
     expect(res.json).to.have.been.calledWith();
   });
 
-  it('Tests if it retuns error is returned when wrong id is passed to deleteProduct', async () => {
+  it('Tests if it returns error is returned when wrong id is passed to deleteProduct', async () => {
     const res = {};
     const req = {
       params: {
@@ -145,10 +146,82 @@ describe('Tests sales controller layer', () => {
     res.json = sinon.stub().returns();
 
     sinon.stub(salesService, 'deleteSale')
-      .resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+      .resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Sale not found' });
 
     const errorStatus = 404;
     await salesController.deleteSale(req, res);
+    expect(res.status).to.have.been.calledWith(errorStatus);
+    expect(res.json).to.have.been.calledWith(notFoundSaleMessage);
+  });
+
+  it('Tests if it returns righ response when updateSale is called', async () => {
+    const res = {};
+    const req = {
+      body: {
+        productId: 1,
+        quantity: 10
+      },
+      params: {
+        id: 1
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(salesService, 'updateSale')
+        .resolves({ type: null, message: rightUpdateSaleResponse });
+
+    const rightStatus = 200;
+    await salesController.updateSale(req, res);
+    expect(res.status).to.have.been.calledWith(rightStatus);
+    expect(res.json).to.have.been.calledWith(rightUpdateSaleResponse);
+  });
+
+  it('Tests if returns error when invalid productId is passed to updateProduct', async () => {
+    const res = {};
+    const req = {
+      body: {
+        productId: 555,
+        quantity: 10,
+      },
+      params: {
+        id: 2
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(salesService, 'updateSale')
+      .resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+
+    const errorStatus = 404;
+    await salesController.updateSale(req, res);
+    expect(res.status).to.have.been.calledWith(errorStatus);
+    expect(res.json).to.have.been.calledWith(notFoundMessage);
+  });
+
+  it('Tests if returns error when invalid saleId is passed to updateProduct', async () => {
+    const res = {};
+    const req = {
+      body: {
+        productId: 2,
+        quantity: 10,
+      },
+      params: {
+        id: 555
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(salesService, 'updateSale')
+      .resolves({ type: 'SALE_NOT_FOUND', message: 'Sale not found' });
+
+    const errorStatus = 404;
+    await salesController.updateSale(req, res);
     expect(res.status).to.have.been.calledWith(errorStatus);
     expect(res.json).to.have.been.calledWith(notFoundSaleMessage);
   });

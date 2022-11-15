@@ -19,7 +19,7 @@ describe('Tests sales service layer', () => {
     expect(result.message).to.be.equal(errorMessage);
   })
 
-  it('Tests if returns right object when valid request is passed', async () => {
+  it('Tests if returns right object when valid request is passed to registerNewSale', async () => {
     sinon.stub(productsModel, 'findById').resolves([salesServiceMock.successResponseMock]);
     sinon.stub(salesModel, 'registerNewSale').resolves(1);
     const rightSuccessMessage = { id: 1, itemsSold: salesServiceMock.successSaleMock };
@@ -43,7 +43,7 @@ describe('Tests sales service layer', () => {
     expect(result.message).to.deep.equal(salesModelMock.saleByIdFinal);
   })
 
-    it('Tests if returns error when invalid id is given', async () => {
+  it('Tests if returns error when invalid id is given', async () => {
     sinon.stub(salesModel, 'getSaleById').resolves([]);
     const invalidId = 333;
     const errorType = 'SALE_NOT_FOUND';
@@ -51,7 +51,7 @@ describe('Tests sales service layer', () => {
     const result = await salesService.getSaleById(invalidId);
     expect(result.type).to.equal(errorType);
     expect(result.message).to.deep.equal(errorMessage);
-    })
+  })
   
   it('Tests if returns right object when deleting a sale', async () => {
     sinon.stub(salesModel, 'getSaleById').resolves([salesServiceMock.saleByIdFinal]);
@@ -66,5 +66,34 @@ describe('Tests sales service layer', () => {
     const result = await salesService.deleteSale(333);
     expect(result.type).to.be.equal('SALE_NOT_FOUND');
     expect(result.message).to.be.equal('Sale not found');
+  });
+
+  it('Tests if it`s possible to update a sale', async () => {
+    sinon.stub(salesModel, 'getSaleById').resolves([salesModelMock.saleByIdFinal]);
+    sinon.stub(productsModel, 'findById').resolves([salesServiceMock.successResponseMock]);
+    sinon.stub(salesModel, 'updateSale').resolves(salesServiceMock.saleByIdCamelized);
+    const newRequestMock = [{ productId: 1, quantity: 20 }];
+    const result = await salesService.updateSale(newRequestMock, 1);
+    expect(result.type).to.equal(null);
+    expect(result.message).to.deep.equal({ saleId: 1, itemsUpdated: salesServiceMock.saleByIdCamelized });
+  });
+
+  it('Tests if error is returned when invalid saleId is passed', async () => {
+    sinon.stub(salesModel, 'getSaleById').resolves([]);
+    const newRequestMock = [{ productId: 1, quantity: 20 }];
+    const errorType = 'SALE_NOT_FOUND';
+    const errorMessage = 'Sale not found';
+    const result = await salesService.updateSale(newRequestMock, 222);
+    expect(result.type).to.equal(errorType);
+    expect(result.message).to.deep.equal(errorMessage);
+  });
+
+  it('Tests if error is returned when invalid productId is passed', async () => {
+    sinon.stub(salesModel, 'getSaleById').resolves([salesModelMock.saleByIdFinal]);
+    sinon.stub(productsModel, 'findById').resolves(undefined);
+    const newRequestMock = [{ productId: 1, quantity: 20 }];
+    const result = await salesService.updateSale(newRequestMock, 1);
+    expect(result.type).to.be.equal('PRODUCT_NOT_FOUND');
+    expect(result.message).to.be.equal('Product not found');
   });
 });
