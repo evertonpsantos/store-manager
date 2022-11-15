@@ -31,9 +31,24 @@ const deleteSale = async (saleId) => {
   return { type: null, message: '' };
 };
 
+const updateSale = async (newInfo, saleId) => {
+  const saleFound = await salesModel.getSaleById(saleId);
+  if (!saleFound.length) return { type: 'SALE_NOT_FOUND', message: 'Sale not found' };
+
+  const productsList = await Promise.all(newInfo
+    .map(({ productId }) => productsModel.findById(productId)));
+  const notFoundProducts = productsList
+    .some((product) => product === undefined || product.length === 0);
+  if (notFoundProducts) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+
+  const result = await salesModel.updateSale(newInfo, saleId);
+  return { type: null, message: { saleId, itemsUpdated: result } };
+};
+
 module.exports = {
   registerNewSale,
   getSales,
   getSaleById,
   deleteSale,
+  updateSale,
 };

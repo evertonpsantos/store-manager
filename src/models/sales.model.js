@@ -49,9 +49,19 @@ const deleteSale = async (saleId) => {
   return affectedRows;
 };
 
+const updateSale = async (newSaleInfo, saleId) => {
+  await Promise.all(newSaleInfo.map((sale) => connection.execute(
+  'UPDATE StoreManager.sales_products SET quantity = ? WHERE sale_id = ? AND product_id = ?',
+  [sale.quantity, saleId, sale.productId],
+  )));
+  const updatedSale = await getSaleById(saleId);
+  return camelize(updatedSale);
+};
+
 module.exports = {
   registerNewSale,
   getSales,
   getSaleById,
   deleteSale,
+  updateSale,
 };
