@@ -30,10 +30,18 @@ const deleteProduct = async (productId) => {
   return { type: null, message: '' };
 };
 
+const getByName = async (productName) => {
+  const stylizedForSQL = `%${productName}%`;
+  const result = await productsModel.getByName(stylizedForSQL);
+  if (!result) return { type: null, message: [] };
+  return { type: null, message: result };
+};
+
 module.exports = {
   getAll,
   findById,
   createNewProduct,
   updateProduct,
   deleteProduct,
+  getByName,
 };
