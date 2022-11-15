@@ -9,7 +9,7 @@ const getAll = async () => {
 };
 
 const findById = async (productId) => {
-  const [result] = await connection.execute(
+  const [[result]] = await connection.execute(
     'SELECT * FROM StoreManager.products WHERE id = ?',
     [productId],
   );
@@ -27,8 +27,18 @@ const createNewProduct = async ({ name }) => {
   return newProductRegistered;
 };
 
+const updateProduct = async (name, productId) => {
+  await connection.execute(
+    'UPDATE StoreManager.products SET name = ? WHERE id = ?',
+    [name, productId],
+  );
+  const updatedProduct = await findById(productId);
+  return camelize(updatedProduct);
+};
+
 module.exports = {
   getAll,
   findById,
   createNewProduct,
+  updateProduct,
 };
