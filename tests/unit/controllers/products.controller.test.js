@@ -130,4 +130,44 @@ describe('Tests the products controller layer', () => {
     expect(res.status).to.have.been.calledWith(errorStatus);
     expect(res.json).to.have.been.calledWith(notFoundMessage);
   });
+
+  it('Tests if it returns right response when updateProduct is called', async () => {
+    const res = {};
+    const req = {
+      params: {
+        id: 3
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(productService, 'deleteProduct')
+        .resolves({ type: null, message: '' });
+
+    const rightStatus = 204;
+    await productsController.deleteProduct(req, res);
+    expect(res.status).to.have.been.calledWith(rightStatus);
+    expect(res.json).to.have.been.calledWith();
+  });
+
+  it('Tests if it retuns error is returned when wrong is passed', async () => {
+    const res = {};
+    const req = {
+      params: {
+        id: 555
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(productService, 'deleteProduct')
+      .resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+
+    const errorStatus = 404;
+    await productsController.deleteProduct(req, res);
+    expect(res.status).to.have.been.calledWith(errorStatus);
+    expect(res.json).to.have.been.calledWith(notFoundMessage);
+  });
 });

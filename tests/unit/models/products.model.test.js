@@ -22,7 +22,7 @@ describe('Tests the products model layer', () => {
     expect(result).to.be.deep.equal(singleProductResponse);
   });
 
-  it('Tests if it possible to insert a new product in the DB', async () => {
+  it('Tests if is possible to insert a new product in the DB', async () => {
     sinon.stub(connection, 'execute')
       .onFirstCall().resolves([{ insertId: 1 }])
       .onSecondCall().resolves([[newRegisteredProductMock]]);
@@ -36,5 +36,11 @@ describe('Tests the products model layer', () => {
       .onSecondCall().resolves([[productModelMocks.updatedProductMock]]);
     const result = await productsModel.updateProduct(`She-Hulk's Glasses`, 1);
     expect(result).to.be.deep.equal(productModelMocks.updatedProductMock);
+  });
+
+  it('Tests if is possible to delete a product', async () => {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+    const result = await productsModel.deleteProduct(3);
+    expect(result).to.be.equal(1);
   });
 });

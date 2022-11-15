@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const productService = require('../../../src/services/products.service');
 const productsModel = require('../../../src/models/products.model');
 const { allProducts, newProduct,
-  newRegisteredProductMock, updatedProductMock } = require('../models/mocks/products.model.mock');
+  newRegisteredProductMock, updatedProductMock, singleProductResponse } = require('../models/mocks/products.model.mock');
 const { successResponseMock } = require('./mocks/sales.service.mock');
 
 describe('Tests the products service layer', () => {
@@ -53,6 +53,21 @@ describe('Tests the products service layer', () => {
   it('Tests if retuns error when invalid product id is passed', async () => {
     sinon.stub(productsModel, 'findById').resolves(undefined);
     const result = await productService.updateProduct({ name: `She-Hulk's Glasses`}, 222);
+    expect(result.type).to.be.equal('PRODUCT_NOT_FOUND');
+    expect(result.message).to.be.equal('Product not found');
+  });
+
+  it('Tests if returns right object when deleting a product', async () => {
+    sinon.stub(productsModel, 'findById').resolves(singleProductResponse);
+    sinon.stub(productsModel, 'deleteProduct').resolves();
+    const result = await productService.deleteProduct(1);
+    expect(result.type).to.be.equal(null);
+    expect(result.message).to.be.equal('');
+  });
+
+  it('Tests if returns error when invalid id is passed to deleteProduct', async () => {
+    sinon.stub(productsModel, 'findById').resolves(undefined);
+    const result = await productService.deleteProduct(333);
     expect(result.type).to.be.equal('PRODUCT_NOT_FOUND');
     expect(result.message).to.be.equal('Product not found');
   });
