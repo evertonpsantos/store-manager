@@ -45,9 +45,10 @@ const deleteProduct = async (productId) => {
 };
 
 const getByName = async (productName) => {
+  const stylizedForSQL = `%${productName}%`;
   const [result] = await connection.execute(
     'SELECT * FROM StoreManager.products WHERE name LIKE ?',
-    [productName],
+    [stylizedForSQL],
   );
   return result;
 };

@@ -31,8 +31,7 @@ const deleteProduct = async (productId) => {
 };
 
 const getByName = async (productName) => {
-  const stylizedForSQL = `%${productName}%`;
-  const result = await productsModel.getByName(stylizedForSQL);
+  const result = await productsModel.getByName(productName);
   if (!result) return { type: null, message: [] };
   return { type: null, message: result };
 };
