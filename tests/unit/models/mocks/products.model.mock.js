@@ -32,10 +32,18 @@ const updatedProductMock = {
   name: `She-Hulk's Glasses`
 }
 
+const byNameProductMock = [
+  {
+  id: 1,
+  name: "Martelo de Thor"
+  }
+]
+
 module.exports = {
   allProducts,
   singleProductResponse,
   newProduct,
   newRegisteredProductMock,
   updatedProductMock,
+  byNameProductMock,
 }

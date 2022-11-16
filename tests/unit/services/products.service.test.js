@@ -3,8 +3,9 @@ const sinon = require('sinon');
 
 const productService = require('../../../src/services/products.service');
 const productsModel = require('../../../src/models/products.model');
+const productsModelMocks = require('../models/mocks/products.model.mock');
 const { allProducts, newProduct,
-  newRegisteredProductMock, updatedProductMock, singleProductResponse } = require('../models/mocks/products.model.mock');
+  newRegisteredProductMock, updatedProductMock, singleProductResponse, byNameProductMock } = productsModelMocks;
 const { successResponseMock } = require('./mocks/sales.service.mock');
 
 describe('Tests the products service layer', () => {
@@ -70,5 +71,19 @@ describe('Tests the products service layer', () => {
     const result = await productService.deleteProduct(333);
     expect(result.type).to.be.equal('PRODUCT_NOT_FOUND');
     expect(result.message).to.be.equal('Product not found');
+  });
+
+  it('Tests if return right object when searching product by name', async () => {
+    sinon.stub(productsModel, 'getByName').resolves(byNameProductMock);
+    const result = await productService.getByName('Martelo');
+    expect(result.type).to.be.equal(null);
+    expect(result.message).to.be.equal(byNameProductMock);
+  });
+
+  it('Tests if return error when searching by name finds nothing', async () => {
+    sinon.stub(productsModel, 'getByName').resolves(undefined);
+    const result = await productService.getByName('Terelelo');
+    expect(result.type).to.be.equal(null);
+    expect(result.message).to.be.deep.equal([]);
   });
 });

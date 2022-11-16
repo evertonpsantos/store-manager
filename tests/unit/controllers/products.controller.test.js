@@ -5,7 +5,7 @@ const { expect } = chai;
 
 const productsController = require('../../../src/controllers/products.controller');
 const productService = require('../../../src/services/products.service');
-const { allProducts, newRegisteredProductMock, updatedProductMock } = require('../models/mocks/products.model.mock');
+const { allProducts, newRegisteredProductMock, updatedProductMock, byNameProductMock } = require('../models/mocks/products.model.mock');
 const { notFoundMessage } = require('./mocks/products.controller.mock');
 
 chai.use(sinonChai);
@@ -149,6 +149,66 @@ describe('Tests the products controller layer', () => {
     await productsController.deleteProduct(req, res);
     expect(res.status).to.have.been.calledWith(rightStatus);
     expect(res.json).to.have.been.calledWith();
+  });
+
+  it('Tests if it retuns error is returned when wrong id is passed to deleteProduct', async () => {
+    const res = {};
+    const req = {
+      params: {
+        id: 555
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(productService, 'deleteProduct')
+      .resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+
+    const errorStatus = 404;
+    await productsController.deleteProduct(req, res);
+    expect(res.status).to.have.been.calledWith(errorStatus);
+    expect(res.json).to.have.been.calledWith(notFoundMessage);
+  });
+
+  it('Tests if it retuns right response when getByName is called', async () => {
+      const res = {};
+    const req = {
+      query: {
+        q: 'Martelo'
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(productService, 'getByName')
+        .resolves({ type: null, message: byNameProductMock });
+
+    const rightStatus = 200;
+    await productsController.getByName(req, res);
+    expect(res.status).to.have.been.calledWith(rightStatus);
+    expect(res.json).to.have.been.calledWith(byNameProductMock);
+  });
+
+  it('Tests if it returns empty array when q is not passed through query', async () => {
+    const res = {};
+    const req = {
+      query: {
+        q: ''
+      }
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon.stub(productService, 'getAll')
+      .resolves({ type: '', message: allProducts });
+
+    const rightStatus = 200;
+    await productsController.getByName(req, res);
+    expect(res.status).to.have.been.calledWith(rightStatus);
+    expect(res.json).to.have.been.calledWith(allProducts);
   });
 
   it('Tests if it retuns error is returned when wrong id is passed to deleteProduct', async () => {

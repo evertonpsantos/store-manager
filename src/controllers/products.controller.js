@@ -40,8 +40,7 @@ const getByName = async (req, res) => {
     const { message } = await productsService.getAll();
     return res.status(200).json(message);
   }
-  const { type, message } = await productsService.getByName(q);
-  if (type) return res.status(errorMap.mapError(type)).json({ message });
+  const { message } = await productsService.getByName(q);
   res.status(200).json(message);
 };
 

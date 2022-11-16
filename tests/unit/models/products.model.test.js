@@ -43,4 +43,10 @@ describe('Tests the products model layer', () => {
     const result = await productsModel.deleteProduct(3);
     expect(result).to.be.equal(1);
   });
+
+  it('Tests if is possible to get product by name wih query', async () => {
+    sinon.stub(connection, 'execute').resolves([productModelMocks.byNameProductMock]);
+    const result = await productsModel.getByName('%Martelo%');
+    expect(result).to.be.deep.equal(productModelMocks.byNameProductMock)
+  });
 });
